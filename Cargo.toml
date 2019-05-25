@@ -1,6 +1,6 @@
 [package]
 name = "mio-serial"
-version = "0.8.0"
+version = "3.2.0"
 authors = ["Zac Berkowitz <zac.berkowitz@gmail.com>"]
 description = "A serial port implementation for mio"
 license = "MIT"
@@ -11,12 +11,21 @@ readme = "README.md"
 keywords = ["rs232", "serial", "mio"]
 categories = ["asynchronous", "hardware-support"]
 
+[badges]
+appveyor = { repository = "berkowski/mio-serial", service = "github" }
+travis-ci = { repository = "berkowski/mio-serial", service = "github" }
+
+[features]
+default = ["libudev"]
+
+libudev = ["serialport/libudev"]
+
 [dependencies]
 mio = "0.6"
 serialport = {git = "https://gitlab.com/susurrus/serialport-rs" }
 
 [target.'cfg(unix)'.dependencies]
-nix = "0.10"
+nix = "0.11"
 
 [target.'cfg(windows)'.dependencies]
 winapi = { version = "0.3", features = ["commapi", "handleapi", "winbase"] }
