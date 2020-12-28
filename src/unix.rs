@@ -1,8 +1,6 @@
 //! Unix impl of mio-enabled serial ports.
-use std::convert::AsRef;
 use std::io::{self, Read, Write};
 use std::os::unix::prelude::*;
-use std::path::Path;
 use std::time::Duration;
 
 use mio::unix::SourceFd;
@@ -43,7 +41,7 @@ impl Serial {
     ///
     /// let serial = Serial::from_path(tty_name, &SerialPortSettings::default()).unwrap();
     /// ```
-    pub fn from_path<T: AsRef<Path>>(builder: &SerialPortBuilder) -> crate::Result<Self> {
+    pub fn open(builder: &SerialPortBuilder) -> crate::Result<Self> {
         let port = TTYPort::open(builder)?;
         Serial::from_serial(port)
     }
