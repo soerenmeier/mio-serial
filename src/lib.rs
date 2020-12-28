@@ -29,6 +29,8 @@ pub use serialport::{
     StopBits,
 };
 
+pub use serialport::new as new_builder;
+
 // Re-export port-enumerating utility function.
 pub use serialport::available_ports;
 
