@@ -24,7 +24,7 @@ pub use serialport::{
     SerialPort,
 
     SerialPortInfo,
-    SerialPortSettings,
+    SerialPortBuilder,
 
     StopBits,
 };

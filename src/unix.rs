@@ -8,10 +8,10 @@ use std::time::Duration;
 use mio::unix::SourceFd;
 use mio::{Token, Interest, Registry};
 use mio::event::{Source};
-
-use serialport::posix::TTYPort;
-use serialport::prelude::*;
-use serialport::{Error, ErrorKind};
+use serialport::{
+    TTYPort, SerialPortBuilder, SerialPort, Error, ErrorKind,
+    DataBits, FlowControl, Parity, StopBits, ClearBuffer
+};
 
 use nix::sys::termios::{self, SetArg, SpecialCharacterIndices};
 use nix::{self, libc};
@@ -43,11 +43,8 @@ impl Serial {
     ///
     /// let serial = Serial::from_path(tty_name, &SerialPortSettings::default()).unwrap();
     /// ```
-    pub fn from_path<T: AsRef<Path>>(
-        path: T,
-        settings: &SerialPortSettings,
-    ) -> crate::Result<Self> {
-        let port = TTYPort::open(path.as_ref(), settings)?;
+    pub fn from_path<T: AsRef<Path>>(builder: &SerialPortBuilder) -> crate::Result<Self> {
+        let port = TTYPort::open(builder)?;
         Serial::from_serial(port)
     }
 
@@ -138,10 +135,6 @@ impl Serial {
 }
 
 impl SerialPort for Serial {
-    /// Returns a struct with the current port settings
-    fn settings(&self) -> SerialPortSettings {
-        self.inner.settings()
-    }
 
     /// Return the name associated with the serial port, if known.
     fn name(&self) -> Option<String> {
@@ -200,15 +193,6 @@ impl SerialPort for Serial {
     /// to required for trait completeness.
     fn timeout(&self) -> Duration {
         Duration::from_secs(0)
-    }
-
-    // Port settings setters
-
-    /// Applies all settings for a struct. This isn't guaranteed to involve only
-    /// a single call into the driver, though that may be done on some
-    /// platforms.
-    fn set_all(&mut self, settings: &SerialPortSettings) -> crate::Result<()> {
-        self.inner.set_all(settings)
     }
 
     /// Sets the baud rate.
@@ -392,6 +376,16 @@ impl SerialPort for Serial {
     /// This function returns an error if the serial port couldn't be cloned.
     fn try_clone(&self) -> crate::Result<Box<dyn SerialPort>> {
         self.inner.try_clone()
+    }
+
+    /// Start transmitting a break
+    fn set_break(&self) -> crate::Result<()> {
+        self.inner.set_break()
+    }
+
+    /// Stop transmitting a break
+    fn clear_break(&self) -> crate::Result<()> {
+        self.inner.clear_break()
     }
 }
 
