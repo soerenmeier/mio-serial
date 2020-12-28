@@ -1,6 +1,6 @@
 [package]
 name = "mio-serial"
-version = "3.3.1"
+version = "3.4.0"
 authors = ["Zac Berkowitz <zac.berkowitz@gmail.com>"]
 description = "A serial port implementation for mio"
 license = "MIT"
@@ -22,15 +22,15 @@ default = ["libudev"]
 libudev = ["serialport/libudev"]
 
 [dependencies]
-mio = "^0.6"
+mio = { version = "0.7", features = ["os-ext"] }
 serialport = { version = "~3.3", default-features = false }
 
 [target.'cfg(unix)'.dependencies]
-nix = "^0.17"
+nix = "0.19"
 
 [target.'cfg(windows)'.dependencies]
 winapi = { version = "0.3", features = ["commapi", "handleapi", "winbase"] }
-mio-named-pipes = "0.1.5"
+mio-named-pipes = "0.1"
 
 [[example]]
 name = "serial_printline"
